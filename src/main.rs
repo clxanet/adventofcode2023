@@ -82,17 +82,48 @@ impl Day1 {
     }
 
     fn process_line(alt: bool, line: &str) -> (Option<char>, Option<char>, String) {
+        let mut index = 0;
         let mut first = None;
         let mut last = None;
         for c in line.chars() {
-            if c.is_ascii_digit() {
+            let substr = &line[index..];
+            if let Some(number) = Self::number_prefix(alt, substr) {
                 if first.is_none() {
-                    first = Some(c)
+                    first = Some(number);
                 }
-                last = Some(c)
+                last = Some(number);
             }
+            index += c.len_utf8();
         }
         (first, last, line.to_string())
+    }
+
+    fn number_prefix(alt: bool, s: &str) -> Option<char> {
+        let digit = s.chars().nth(0).unwrap();
+        if digit.is_ascii_digit() {
+            return Some(digit);
+        }
+        if !alt {
+            return None;
+        }
+        for (alt, digit) in [
+            ("one", '1'),
+            ("two", '2'),
+            ("three", '3'),
+            ("four", '4'),
+            ("five", '5'),
+            ("six", '6'),
+            ("seven", '7'),
+            ("eight", '8'),
+            ("nine", '9'),
+        ]
+        .iter()
+        {
+            if s.starts_with(alt) {
+                return Some(*digit);
+            }
+        }
+        None
     }
 }
 
