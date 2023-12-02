@@ -25,7 +25,7 @@ struct Args {
 impl Args {
     fn execute(self) {
         match self.day {
-            1 => println!("{:?}", Day1::solve(&self.input())),
+            1 => println!("calibration: {}", Day1::solve(&self.input()).calibration()),
             day => unimplemented!("the solution for day {} is missing", day),
         }
     }
@@ -34,6 +34,15 @@ impl Args {
         let mut lines = Vec::new();
         if let Some(ref single) = self.single {
             lines.push(single.clone())
+        }
+        if let Some(ref path) = self.path {
+            let content = std::fs::read_to_string(path).unwrap();
+            lines.extend(
+                content
+                    .split('\n')
+                    .map(|line| line.trim().to_string())
+                    .filter(|s| !s.is_empty()),
+            );
         }
         assert!(
             !lines.is_empty(),
@@ -45,7 +54,7 @@ impl Args {
 
 #[derive(Debug, PartialEq)]
 struct Day1 {
-    solutions: Vec<(Option<char>, Option<char>)>,
+    solutions: Vec<(Option<char>, Option<char>, String)>,
 }
 
 impl Day1 {
@@ -62,7 +71,7 @@ impl Day1 {
                     last = Some(c)
                 }
             }
-            solutions.push((first, last));
+            solutions.push((first, last, line.as_ref().to_string()));
         }
         Self { solutions }
     }
@@ -70,6 +79,7 @@ impl Day1 {
     fn calibration(&self) -> i32 {
         let mut total = 0;
         for sol in self.solutions.iter() {
+            println!("{sol:?}");
             let digits = (
                 (sol.0.unwrap().to_string()).parse::<i32>().unwrap(),
                 (sol.1.unwrap().to_string()).parse::<i32>().unwrap(),
