@@ -38,6 +38,24 @@ impl Game {
         let cubes = s.split(',').map(Color::parse).collect();
         Self { cubes }
     }
+
+    fn is_possile(&self, limits: Vec<(i32, Color)>) -> bool {
+        let mut target = [0; Color::COUNT];
+        let mut this = [0; Color::COUNT];
+        for limit in limits {
+            target[limit.1.to_index()] = limit.0;
+        }
+        for cube in self.cubes.iter() {
+            this[cube.1.to_index()] = cube.0;
+        }
+
+        for (a, b) in target.iter().copied().zip(this.iter().copied()) {
+            if a < b {
+                return false;
+            }
+        }
+        true
+    }
 }
 
 #[derive(Debug, PartialEq)]
@@ -60,6 +78,24 @@ impl Color {
                 color => panic!("unknown color: {color}"),
             },
         )
+    }
+
+    const COUNT: usize = 3;
+    fn to_index(&self) -> usize {
+        match self {
+            Color::Red => 0,
+            Color::Green => 1,
+            Color::Blue => 2,
+        }
+    }
+
+    fn from_index(i: usize) -> Self {
+        match i {
+            0 => Color::Red,
+            1 => Color::Green,
+            2 => Color::Blue,
+            _ => panic!(),
+        }
     }
 }
 
@@ -86,5 +122,26 @@ mod tests {
                 ]
             }
         );
+    }
+
+    #[test]
+    fn possible_games() {
+        assert!(Game {
+            cubes: vec![(2, Color::Blue)]
+        }
+        .is_possile(vec![(2, Color::Blue)]));
+        assert!(Game {
+            cubes: vec![(1, Color::Blue)]
+        }
+        .is_possile(vec![(2, Color::Blue)]));
+        assert!(!Game {
+            cubes: vec![(2, Color::Blue)]
+        }
+        .is_possile(vec![(1, Color::Blue)]));
+
+        assert!(!Game {
+            cubes: vec![(1, Color::Blue)]
+        }
+        .is_possile(vec![]));
     }
 }
