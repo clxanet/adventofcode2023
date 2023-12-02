@@ -55,7 +55,7 @@ impl Line {
     }
 }
 
-#[derive(Debug, Default, PartialEq, PartialOrd)]
+#[derive(Debug, Default, PartialEq)]
 struct Game {
     red: i32,
     blue: i32,
@@ -82,7 +82,7 @@ impl Game {
     }
 
     fn is_possile(&self, limits: &Self) -> bool {
-        self <= limits
+        self.red <= limits.red && self.green <= limits.green && self.blue <= limits.blue
     }
 
     fn combine(&self, other: &Self) -> Self {
