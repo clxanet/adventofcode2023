@@ -79,7 +79,6 @@ impl Day1 {
     fn calibration(&self) -> i32 {
         let mut total = 0;
         for sol in self.solutions.iter() {
-            println!("{sol:?}");
             let digits = (
                 (sol.0.unwrap().to_string()).parse::<i32>().unwrap(),
                 (sol.1.unwrap().to_string()).parse::<i32>().unwrap(),
