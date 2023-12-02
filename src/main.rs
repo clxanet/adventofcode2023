@@ -97,25 +97,25 @@ mod tests {
         assert_eq!(
             Day1::solve(&["1abc2"]),
             Day1 {
-                solutions: vec![(Some('1'), Some('2'))]
+                solutions: vec![(Some('1'), Some('2'), "1abc2".to_string())]
             }
         );
         assert_eq!(
             Day1::solve(&["pqr3stu8vwx"]),
             Day1 {
-                solutions: vec![(Some('3'), Some('8'))]
+                solutions: vec![(Some('3'), Some('8'), "pqr3stu8vwx".to_string())]
             }
         );
         assert_eq!(
             Day1::solve(&["a1b2c3d4e5f"]),
             Day1 {
-                solutions: vec![(Some('1'), Some('5'))]
+                solutions: vec![(Some('1'), Some('5'), "a1b2c3d4e5f".to_string())]
             }
         );
         assert_eq!(
             Day1::solve(&["treb7uchet"]),
             Day1 {
-                solutions: vec![(Some('7'), Some('7'))]
+                solutions: vec![(Some('7'), Some('7'), "treb7uchet".to_string())]
             }
         );
     }
