@@ -66,6 +66,18 @@ impl Day1 {
         }
         Self { solutions }
     }
+
+    fn calibration(&self) -> i32 {
+        let mut total = 0;
+        for sol in self.solutions.iter() {
+            let digits = (
+                (sol.0.unwrap().to_string()).parse::<i32>().unwrap(),
+                (sol.1.unwrap().to_string()).parse::<i32>().unwrap(),
+            );
+            total += digits.0 * 10 + digits.1;
+        }
+        total
+    }
 }
 
 #[cfg(test)]
@@ -96,6 +108,22 @@ mod tests {
             Day1 {
                 solutions: vec![(Some('7'), Some('7'))]
             }
+        );
+    }
+
+    #[test]
+    fn day1_examples_calibrtation() {
+        assert_eq!(Day1::solve(&["1abc2"]).calibration(), 12);
+        assert_eq!(Day1::solve(&["pqr3stu8vwx"]).calibration(), 38);
+        assert_eq!(Day1::solve(&["a1b2c3d4e5f"]).calibration(), 15);
+        assert_eq!(Day1::solve(&["treb7uchet"]).calibration(), 77);
+    }
+
+    #[test]
+    fn day1_examples_calibrtation_total() {
+        assert_eq!(
+            Day1::solve(&["1abc2", "pqr3stu8vwx", "a1b2c3d4e5f", "treb7uchet"]).calibration(),
+            12 + 38 + 15 + 77
         );
     }
 }
