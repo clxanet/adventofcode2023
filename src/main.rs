@@ -25,7 +25,10 @@ struct Args {
 impl Args {
     fn execute(self) {
         match self.day {
-            1 => println!("calibration: {}", Day1::solve(&self.input()).calibration()),
+            1 => println!(
+                "calibration: {}",
+                Day1::solve(self.alt, &self.input()).calibration()
+            ),
             day => unimplemented!("the solution for day {} is missing", day),
         }
     }
@@ -58,7 +61,7 @@ struct Day1 {
 }
 
 impl Day1 {
-    fn solve<S: AsRef<str>>(lines: &[S]) -> Self {
+    fn solve<S: AsRef<str>>(alt: bool, lines: &[S]) -> Self {
         let mut solutions = Vec::with_capacity(lines.len());
         for line in lines {
             let mut first = None;
@@ -95,25 +98,25 @@ mod tests {
     #[test]
     fn day1_examples() {
         assert_eq!(
-            Day1::solve(&["1abc2"]),
+            Day1::solve(false, &["1abc2"]),
             Day1 {
                 solutions: vec![(Some('1'), Some('2'), "1abc2".to_string())]
             }
         );
         assert_eq!(
-            Day1::solve(&["pqr3stu8vwx"]),
+            Day1::solve(false, &["pqr3stu8vwx"]),
             Day1 {
                 solutions: vec![(Some('3'), Some('8'), "pqr3stu8vwx".to_string())]
             }
         );
         assert_eq!(
-            Day1::solve(&["a1b2c3d4e5f"]),
+            Day1::solve(false, &["a1b2c3d4e5f"]),
             Day1 {
                 solutions: vec![(Some('1'), Some('5'), "a1b2c3d4e5f".to_string())]
             }
         );
         assert_eq!(
-            Day1::solve(&["treb7uchet"]),
+            Day1::solve(false, &["treb7uchet"]),
             Day1 {
                 solutions: vec![(Some('7'), Some('7'), "treb7uchet".to_string())]
             }
@@ -122,16 +125,20 @@ mod tests {
 
     #[test]
     fn day1_examples_calibrtation() {
-        assert_eq!(Day1::solve(&["1abc2"]).calibration(), 12);
-        assert_eq!(Day1::solve(&["pqr3stu8vwx"]).calibration(), 38);
-        assert_eq!(Day1::solve(&["a1b2c3d4e5f"]).calibration(), 15);
-        assert_eq!(Day1::solve(&["treb7uchet"]).calibration(), 77);
+        assert_eq!(Day1::solve(false, &["1abc2"]).calibration(), 12);
+        assert_eq!(Day1::solve(false, &["pqr3stu8vwx"]).calibration(), 38);
+        assert_eq!(Day1::solve(false, &["a1b2c3d4e5f"]).calibration(), 15);
+        assert_eq!(Day1::solve(false, &["treb7uchet"]).calibration(), 77);
     }
 
     #[test]
     fn day1_examples_calibrtation_total() {
         assert_eq!(
-            Day1::solve(&["1abc2", "pqr3stu8vwx", "a1b2c3d4e5f", "treb7uchet"]).calibration(),
+            Day1::solve(
+                false,
+                &["1abc2", "pqr3stu8vwx", "a1b2c3d4e5f", "treb7uchet"]
+            )
+            .calibration(),
             12 + 38 + 15 + 77
         );
     }
