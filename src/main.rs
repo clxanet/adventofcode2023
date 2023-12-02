@@ -32,7 +32,7 @@ impl Args {
                 "calibration: {}",
                 day1::Day1::solve(self.alt, &self.input()).calibration()
             ),
-            2 => println!("sum: {}", day2::Day2::solve(self.alt, &self.input()).sum()),
+            2 => println!("sum: {}", day2::Day2::solve(&self.input()).sum(self.alt)),
             day => unimplemented!("the solution for day {} is missing", day),
         }
     }

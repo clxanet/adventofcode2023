@@ -3,23 +3,30 @@ pub struct Day2 {
 }
 
 impl Day2 {
-    pub fn solve<S: AsRef<str>>(alt: bool, lines: &[S]) -> Self {
-        let _ = alt;
+    pub fn solve<S: AsRef<str>>(lines: &[S]) -> Self {
         let games = lines.iter().map(S::as_ref).map(Line::parse).collect();
         Self { games }
     }
 
-    pub fn sum(&self) -> i32 {
+    pub fn sum(&self, alt: bool) -> i32 {
         const LIMITS: Game = Game {
             red: 12,
             green: 13,
             blue: 14,
         };
-        self.games
-            .iter()
-            .filter(|line| line.is_possible(&LIMITS))
-            .map(|line| line.game_id)
-            .sum()
+        if !alt {
+            self.games
+                .iter()
+                .filter(|line| line.is_possible(&LIMITS))
+                .map(|line| line.game_id)
+                .sum()
+        } else {
+            self.games
+                .iter()
+                .map(Line::minimum_set)
+                .map(Game::into_power)
+                .sum()
+        }
     }
 }
 
@@ -39,6 +46,12 @@ impl Line {
 
     fn is_possible(&self, limits: &Game) -> bool {
         self.games.iter().all(|game| game.is_possile(limits))
+    }
+
+    fn minimum_set(&self) -> Game {
+        self.games
+            .iter()
+            .fold(Game::default(), |state, game| state.combine(game))
     }
 }
 
@@ -70,6 +83,18 @@ impl Game {
 
     fn is_possile(&self, limits: &Self) -> bool {
         self <= limits
+    }
+
+    fn combine(&self, other: &Self) -> Self {
+        Self {
+            red: self.red.max(other.red),
+            green: self.green.max(other.green),
+            blue: self.blue.max(other.blue),
+        }
+    }
+
+    fn into_power(self) -> i32 {
+        self.red * self.green * self.blue
     }
 }
 
