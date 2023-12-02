@@ -64,17 +64,7 @@ impl Day1 {
     fn solve<S: AsRef<str>>(alt: bool, lines: &[S]) -> Self {
         let mut solutions = Vec::with_capacity(lines.len());
         for line in lines {
-            let mut first = None;
-            let mut last = None;
-            for c in line.as_ref().chars() {
-                if c.is_ascii_digit() {
-                    if first.is_none() {
-                        first = Some(c)
-                    }
-                    last = Some(c)
-                }
-            }
-            solutions.push((first, last, line.as_ref().to_string()));
+            solutions.push(Self::process_line(alt, line.as_ref()));
         }
         Self { solutions }
     }
@@ -89,6 +79,20 @@ impl Day1 {
             total += digits.0 * 10 + digits.1;
         }
         total
+    }
+
+    fn process_line(alt: bool, line: &str) -> (Option<char>, Option<char>, String) {
+        let mut first = None;
+        let mut last = None;
+        for c in line.chars() {
+            if c.is_ascii_digit() {
+                if first.is_none() {
+                    first = Some(c)
+                }
+                last = Some(c)
+            }
+        }
+        (first, last, line.to_string())
     }
 }
 
