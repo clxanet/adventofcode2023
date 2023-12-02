@@ -1,14 +1,21 @@
-pub struct Day2 {}
+pub struct Day2 {
+    games: Vec<Line>,
+}
 
 impl Day2 {
     pub fn solve<S: AsRef<str>>(alt: bool, lines: &[S]) -> Self {
         let _ = alt;
-        let _ = lines;
-        Self {}
+        let games = lines.iter().map(S::as_ref).map(Line::parse).collect();
+        Self { games }
     }
 
     pub fn sum(&self) -> i32 {
-        0
+        const LIMITS: &[(i32, Color)] = &[(12, Color::Red), (13, Color::Green), (14, Color::Blue)];
+        self.games
+            .iter()
+            .filter(|line| line.is_possible(LIMITS))
+            .map(|line| line.game_id)
+            .sum()
     }
 }
 
@@ -25,6 +32,10 @@ impl Line {
         let games = rest.split(';').map(Game::parse).collect();
         Self { game_id, games }
     }
+
+    fn is_possible(&self, limits: &[(i32, Color)]) -> bool {
+        self.games.iter().all(|game| game.is_possile(limits))
+    }
 }
 
 #[derive(Debug, PartialEq)]
@@ -39,7 +50,7 @@ impl Game {
         Self { cubes }
     }
 
-    fn is_possile(&self, limits: Vec<(i32, Color)>) -> bool {
+    fn is_possile(&self, limits: &[(i32, Color)]) -> bool {
         let mut target = [0; Color::COUNT];
         let mut this = [0; Color::COUNT];
         for limit in limits {
@@ -129,19 +140,19 @@ mod tests {
         assert!(Game {
             cubes: vec![(2, Color::Blue)]
         }
-        .is_possile(vec![(2, Color::Blue)]));
+        .is_possile(&[(2, Color::Blue)]));
         assert!(Game {
             cubes: vec![(1, Color::Blue)]
         }
-        .is_possile(vec![(2, Color::Blue)]));
+        .is_possile(&[(2, Color::Blue)]));
         assert!(!Game {
             cubes: vec![(2, Color::Blue)]
         }
-        .is_possile(vec![(1, Color::Blue)]));
+        .is_possile(&[(1, Color::Blue)]));
 
         assert!(!Game {
             cubes: vec![(1, Color::Blue)]
         }
-        .is_possile(vec![]));
+        .is_possile(&[]));
     }
 }
