@@ -58,9 +58,8 @@ impl Day1 {
                 if c.is_ascii_digit() {
                     if first.is_none() {
                         first = Some(c)
-                    } else {
-                        last = Some(c)
                     }
+                    last = Some(c)
                 }
             }
             solutions.push((first, last));
