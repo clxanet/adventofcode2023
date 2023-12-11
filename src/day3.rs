@@ -37,7 +37,7 @@ impl Day3 {
         Self { numbers, symbols }
     }
 
-    fn adjacent(&self) -> Vec<u32> {
+    fn part_numbers(&self) -> Vec<u32> {
         let mut ret = vec![];
         for number in self.numbers.iter() {
             if self.symbols.iter().any(|s| number.is_adjacent(s)) {
@@ -48,7 +48,7 @@ impl Day3 {
     }
 
     pub fn sum(&self) -> u32 {
-        self.adjacent().into_iter().sum()
+        self.part_numbers().into_iter().sum()
     }
 }
 
@@ -157,7 +157,7 @@ mod tests {
     fn example() {
         let solution = Day3::solve(EXAMPLE);
         assert_eq!(
-            solution.adjacent(),
+            solution.part_numbers(),
             vec![467, 35, 633, 617, 592, 755, 664, 598]
         );
         assert_eq!(solution.sum(), 4361)
