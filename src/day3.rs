@@ -106,7 +106,6 @@ mod tests {
     ];
 
     #[test]
-
     fn is_a_symbol() {
         assert!(is_symbol('#'));
         assert!(is_symbol('+'));
