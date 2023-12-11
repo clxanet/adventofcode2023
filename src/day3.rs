@@ -96,6 +96,9 @@ fn numbers_in_line<S: AsRef<str>>(y: usize, line: S) -> impl Iterator<Item = Num
             number = None;
         }
     }
+    if let Some(n) = number {
+        numbers.push(n)
+    }
     numbers.into_iter()
 }
 
