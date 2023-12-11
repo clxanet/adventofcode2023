@@ -50,6 +50,21 @@ impl Number {
             x: (self.x.0, self.x.1 + 1),
         }
     }
+
+    fn is_adjacent(&self, symbol: &Symbol) -> bool {
+        let mut xs = (self.x.0)..=(self.x.1);
+        coord_is_adjacent(self.y, symbol.y) && xs.any(|x| coord_is_adjacent(x, symbol.x))
+    }
+}
+
+fn coord_is_adjacent(a: usize, b: usize) -> bool {
+    if let Some(x) = a.checked_sub(b) {
+        x <= 1
+    } else if let Some(x) = b.checked_sub(a) {
+        x <= 1
+    } else {
+        false
+    }
 }
 
 fn numbers_in_line<S: AsRef<str>>(y: usize, line: S) -> impl Iterator<Item = Number> {
@@ -104,6 +119,21 @@ mod tests {
         "...$.*....",
         ".664.598..",
     ];
+
+    #[test]
+    fn single_digit_adjacent() {
+        let number = Number {
+            value: 0,
+            x: (1, 1),
+            y: 1,
+        };
+        for x in 0..=2 {
+            for y in 0..=2 {
+                let symbol = Symbol { value: '+', x, y };
+                assert!(dbg!(&number).is_adjacent(dbg!(&symbol)));
+            }
+        }
+    }
 
     #[test]
     fn is_a_symbol() {
