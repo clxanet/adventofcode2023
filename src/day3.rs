@@ -1,12 +1,22 @@
 pub struct Day3 {
     #[allow(unused)]
     numbers: Vec<Number>,
+
+    #[allow(unused)]
+    symbols: Vec<Symbol>,
 }
 
 #[derive(Debug, PartialEq)]
 struct Number {
     value: u32,
     x: (usize, usize),
+    y: usize,
+}
+
+#[derive(Debug, PartialEq)]
+struct Symbol {
+    value: char,
+    x: usize,
     y: usize,
 }
 
@@ -18,7 +28,13 @@ impl Day3 {
             .enumerate()
             .flat_map(|(y, line)| numbers_in_line(y, line))
             .collect();
-        Self { numbers }
+
+        let symbols = lines
+            .iter()
+            .enumerate()
+            .flat_map(|(y, line)| symbols_in_line(y, line))
+            .collect();
+        Self { numbers, symbols }
     }
 
     pub fn min(&self) -> i32 {
@@ -58,6 +74,20 @@ fn numbers_in_line<S: AsRef<str>>(y: usize, line: S) -> impl Iterator<Item = Num
     numbers.into_iter()
 }
 
+fn symbols_in_line<S: AsRef<str>>(y: usize, line: S) -> impl Iterator<Item = Symbol> {
+    let mut symbols = vec![];
+    for (x, c) in line.as_ref().chars().enumerate() {
+        if is_symbol(c) {
+            symbols.push(Symbol { value: c, x, y })
+        }
+    }
+    symbols.into_iter()
+}
+
+fn is_symbol(c: char) -> bool {
+    !(c.is_ascii_digit() || c == '.')
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -74,6 +104,59 @@ mod tests {
         "...$.*....",
         ".664.598..",
     ];
+
+    #[test]
+
+    fn is_a_symbol() {
+        assert!(is_symbol('#'));
+        assert!(is_symbol('+'));
+        assert!(is_symbol('-'));
+        assert!(is_symbol('!'));
+
+        assert!(!is_symbol('1'));
+        assert!(!is_symbol('1'));
+        assert!(!is_symbol('0'));
+    }
+
+    #[test]
+    fn parse_symbosl() {
+        let solution = Day3::solve(EXAMPLE);
+        assert_eq!(
+            solution.symbols,
+            vec![
+                Symbol {
+                    value: '*',
+                    x: 3,
+                    y: 1,
+                },
+                Symbol {
+                    value: '#',
+                    x: 6,
+                    y: 3,
+                },
+                Symbol {
+                    value: '*',
+                    x: 3,
+                    y: 4,
+                },
+                Symbol {
+                    value: '+',
+                    x: 5,
+                    y: 5,
+                },
+                Symbol {
+                    value: '$',
+                    x: 3,
+                    y: 8,
+                },
+                Symbol {
+                    value: '*',
+                    x: 5,
+                    y: 8,
+                },
+            ]
+        )
+    }
 
     #[test]
     fn parse_numbers() {
