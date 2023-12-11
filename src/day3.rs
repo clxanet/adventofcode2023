@@ -1,8 +1,5 @@
 pub struct Day3 {
-    #[allow(unused)]
     numbers: Vec<Number>,
-
-    #[allow(unused)]
     symbols: Vec<Symbol>,
 }
 
@@ -46,9 +43,33 @@ impl Day3 {
         }
         ret
     }
+    fn gears(&self) -> Vec<(u32, u32)> {
+        let mut ret = vec![];
+        for symbol in self.symbols.iter() {
+            // ignore non-gears
+            if symbol.value != '*' {
+                continue;
+            }
+            let mut parts = self.numbers.iter().filter(|n| n.is_adjacent(symbol));
+            if let Some(first) = parts.next() {
+                if let Some(second) = parts.next() {
+                    if parts.next().is_some() {
+                        // too many parts to be a gear
+                        continue;
+                    }
+                    ret.push((first.value, second.value));
+                }
+            }
+        }
+        ret
+    }
 
-    pub fn sum(&self) -> u32 {
-        self.part_numbers().into_iter().sum()
+    pub fn sum(&self, alt: bool) -> u32 {
+        if !alt {
+            self.part_numbers().into_iter().sum()
+        } else {
+            self.gears().into_iter().map(|(a, b)| a * b).sum()
+        }
     }
 }
 
@@ -154,13 +175,20 @@ mod tests {
     }
 
     #[test]
-    fn example() {
+    fn example_gears() {
+        let solution = Day3::solve(EXAMPLE);
+        assert_eq!(solution.gears(), vec![(467, 35), (755, 598)]);
+        assert_eq!(solution.sum(true), 467835)
+    }
+
+    #[test]
+    fn example_part_numbers() {
         let solution = Day3::solve(EXAMPLE);
         assert_eq!(
             solution.part_numbers(),
             vec![467, 35, 633, 617, 592, 755, 664, 598]
         );
-        assert_eq!(solution.sum(), 4361)
+        assert_eq!(solution.sum(false), 4361)
     }
 
     #[test]
