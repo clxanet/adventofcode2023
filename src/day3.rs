@@ -37,8 +37,18 @@ impl Day3 {
         Self { numbers, symbols }
     }
 
-    pub fn min(&self) -> i32 {
-        0
+    fn adjacent(&self) -> Vec<u32> {
+        let mut ret = vec![];
+        for number in self.numbers.iter() {
+            if self.symbols.iter().any(|s| number.is_adjacent(s)) {
+                ret.push(number.value);
+            }
+        }
+        ret
+    }
+
+    pub fn sum(&self) -> u32 {
+        self.adjacent().into_iter().sum()
     }
 }
 
@@ -119,6 +129,36 @@ mod tests {
         "...$.*....",
         ".664.598..",
     ];
+
+    #[test]
+    fn symbol_between_numbers() {
+        let solution = Day3::solve(&["841*168"]);
+        assert_eq!(
+            solution.numbers,
+            vec![
+                Number {
+                    value: 841,
+                    x: (0, 2),
+                    y: 0
+                },
+                Number {
+                    value: 168,
+                    x: (4, 6),
+                    y: 0
+                }
+            ]
+        );
+    }
+
+    #[test]
+    fn example() {
+        let solution = Day3::solve(EXAMPLE);
+        assert_eq!(
+            solution.adjacent(),
+            vec![467, 35, 633, 617, 592, 755, 664, 598]
+        );
+        assert_eq!(solution.sum(), 4361)
+    }
 
     #[test]
     fn single_digit_adjacent() {
