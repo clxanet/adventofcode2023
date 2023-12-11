@@ -206,7 +206,7 @@ mod tests {
     }
 
     #[test]
-    fn parse_symbosl() {
+    fn parse_symbols() {
         let solution = Day3::solve(EXAMPLE);
         assert_eq!(
             solution.symbols,
