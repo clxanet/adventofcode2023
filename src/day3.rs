@@ -136,6 +136,21 @@ mod tests {
     }
 
     #[test]
+    fn triple_digit_adjacent() {
+        let number = Number {
+            value: 123,
+            x: (1, 3),
+            y: 1,
+        };
+        for x in 0..=4 {
+            for y in 0..=2 {
+                let symbol = Symbol { value: '+', x, y };
+                assert!(dbg!(&number).is_adjacent(dbg!(&symbol)));
+            }
+        }
+    }
+
+    #[test]
     fn is_a_symbol() {
         assert!(is_symbol('#'));
         assert!(is_symbol('+'));
